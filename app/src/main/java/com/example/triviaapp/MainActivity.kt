@@ -30,6 +30,11 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@Composable
+fun MyTriviaApp(){
+
+}
+
 
 
 @Preview(showBackground = true)
