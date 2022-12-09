@@ -40,7 +40,7 @@ fun MyTriviaApp() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Catalina",
+                text = "Hello",
                 style = TextStyle(
                     fontWeight = FontWeight.ExtraBold,
                     fontSize = 35.sp
