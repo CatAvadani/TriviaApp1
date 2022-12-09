@@ -1,9 +1,7 @@
 package com.example.triviaapp.components
 
 import android.util.Log
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -11,11 +9,14 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextIndent
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.triviaapp.screens.QuestionViewModel
+import com.example.triviaapp.util.AppColors
 
 @Composable
 fun Questions(viewModel: QuestionViewModel) {
@@ -33,24 +34,55 @@ fun Questions(viewModel: QuestionViewModel) {
     }
 }
 
-@Preview
 @Composable
 fun QuestionDisplay(){
     Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colors.background
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .padding(4.dp),
+        color = AppColors.mDarkPurple
     ) {
         Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.Start,
+            modifier = Modifier.padding(12.dp)
         ) {
-            Text(
-                text = "Hello",
-                style = TextStyle(
-                    fontWeight = FontWeight.ExtraBold,
-                    fontSize = 35.sp
-                )
-            )
+            QuestionTracker()
         }
     }
+}
+@Preview(showBackground = true)
+@Composable
+fun QuestionTracker(
+    counter: Int = 10,
+    outOf: Int = 100
+) {
+    Text(text = buildAnnotatedString {
+        withStyle(style = ParagraphStyle(textIndent = TextIndent.None)) {
+            withStyle(
+                style = SpanStyle(
+                    color = AppColors.mLightGray,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 27.sp
+                )) {
+                append("Question $counter/")
+                withStyle(style = SpanStyle(
+                    color = AppColors.mLightGray,
+                    fontWeight = FontWeight.Light,
+                    fontSize = 14.sp)) {
+                    append("$outOf")
+                }
+            }
+        }
+    },
+        modifier = Modifier.padding(20.dp)
+    )
+
+}
+
+@Preview(showBackground = true)
+@Composable
+fun QuestionDisplayPreview() {
+    QuestionDisplay()
 }
