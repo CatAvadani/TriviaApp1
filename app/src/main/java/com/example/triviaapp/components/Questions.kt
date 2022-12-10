@@ -74,8 +74,7 @@ fun QuestionDisplay(
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight()
-            .padding(4.dp),
+            .fillMaxHeight(),
         color = AppColors.mDarkPurple
     ) {
         Column(
@@ -89,9 +88,11 @@ fun QuestionDisplay(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(4.dp)
-            ) {
+            )
+            {
                 Text(
-                    text = question.question.toString(),
+                    text = question.question.toString()
+                    ,
                     modifier = Modifier
                         .padding(6.dp)
                         .align(alignment = Alignment.Start)
@@ -105,12 +106,12 @@ fun QuestionDisplay(
                     Row(
                         modifier = Modifier
                             .padding(3.dp)
-                            .fillMaxHeight()
-                            .height(45.dp)
+                            .fillMaxWidth()
+                            .height(55.dp)
                             .border(
                                 width = 4.dp,
                                 brush = Brush.linearGradient(
-                                    listOf(AppColors.mLightPurple, AppColors.mLightPurple)
+                                    listOf(AppColors.mOffDarkPurple, AppColors.mOffDarkPurple)
                                 ),
                                 shape = RoundedCornerShape(15.dp)
                             )
@@ -138,11 +139,39 @@ fun QuestionDisplay(
                                 } else {
                                     Color.Red.copy((0.2f))
                                 }))
-                        Text(text = answerText.toString())
+                        val annotatedString = buildAnnotatedString {
+                            withStyle(style = SpanStyle(fontWeight = FontWeight.Light,
+                                color = if (correctAnswerState.value == true
+                                    && index == answerState.value ) {
+                                    Color.Green
+                                } else if (correctAnswerState.value == false
+                                    && index == answerState.value) {
+                                    Color.Red
+                                } else {
+                                    AppColors.mOffWhite
+                                }
+                            )) {
+                                append(answerText!!)
+                            }
 
+                        }
+                        //Text(text = answerText.toString())
+                        Text(text = annotatedString, modifier = Modifier.padding(6.dp))
                     }
-
                 }
+                Button(onClick = { /*TODO*/ },
+                    modifier = Modifier
+                        .padding(3.dp)
+                        .align(alignment = Alignment.CenterHorizontally),
+                    shape = RoundedCornerShape(34.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = AppColors.mLightBlue)){
+                        Text(text = "Next",
+                            modifier = Modifier.padding(4.dp),
+                            color = AppColors.mOffWhite,
+                            fontSize = 17.sp
+                        )
+                    }
             }
         }
     }
@@ -162,9 +191,7 @@ fun DrawDottedLine(pathEffect: PathEffect) {
             end = Offset(size.width, 0f),
             pathEffect = pathEffect
         )
-
     }
-
 }
 
 
@@ -172,7 +199,7 @@ fun DrawDottedLine(pathEffect: PathEffect) {
 @Composable
 fun QuestionTracker(
     counter: Int = 10,
-    outOf: Int = 100
+    outOf: Int = 150
 ) {
     Text(
         text = buildAnnotatedString {
