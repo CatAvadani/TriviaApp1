@@ -1,20 +1,33 @@
 package com.example.triviaapp.components
 
 import android.util.Log
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextIndent
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.triviaapp.model.Question
+import com.example.triviaapp.model.QuestionItem
 import com.example.triviaapp.screens.QuestionViewModel
 import com.example.triviaapp.util.AppColors
 
@@ -35,7 +48,17 @@ fun Questions(viewModel: QuestionViewModel) {
 }
 
 @Composable
-fun QuestionDisplay(){
+fun QuestionDisplay(
+    question: QuestionItem,
+    questionIndex: ArrayList<Int>,
+    viewModel: QuestionViewModel,
+    onNextClicked: (Int) -> Unit
+){
+    val choicesState = remember(question) {
+        question.choices?.toMutableList()
+
+    }
+    val pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f,10f),0f)
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -49,9 +72,68 @@ fun QuestionDisplay(){
             modifier = Modifier.padding(12.dp)
         ) {
             QuestionTracker()
+            DrawDottedLine(pathEffect = pathEffect)
+            
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(4.dp)) {
+                Text(text = "What's the meaning of all this?",
+                    modifier = Modifier
+                        .padding(6.dp)
+                        .align(alignment = Alignment.Start)
+                        .fillMaxHeight(0.3f),
+                    fontSize = 17.sp,
+                    fontWeight = FontWeight.Bold,
+                    lineHeight = 22.sp,
+                    color = AppColors.mOffWhite
+                )
+                choicesState?.forEachIndexed { index, answerText ->
+                    Row(modifier = Modifier
+                        .padding(3.dp)
+                        .fillMaxHeight()
+                        .height(45.dp)
+                        .border(
+                            width = 4.dp,
+                            brush = Brush.linearGradient(
+                                listOf(AppColors.mLightPurple, AppColors.mLightPurple)),
+                            shape = RoundedCornerShape(15.dp))
+                        .clip(RoundedCornerShape(
+                            topStartPercent = 50,
+                            topEndPercent = 50,
+                            bottomStartPercent = 50,
+                            bottomEndPercent = 50
+                        ))
+                        .background(Color.Transparent)
+
+                    ) {
+
+                    }
+
+                }
+            }
         }
     }
 }
+
+
+@Composable
+fun DrawDottedLine(pathEffect: PathEffect){
+    Canvas(modifier = Modifier
+        .fillMaxWidth()
+        .height(1.dp)) {
+        drawLine(
+            color = AppColors.mOffWhite,
+            start = Offset(0f,0f),
+            end = Offset(size.width, 0f),
+            pathEffect = pathEffect
+        )
+
+    }
+
+}
+
+
+
 @Preview(showBackground = true)
 @Composable
 fun QuestionTracker(
@@ -84,5 +166,5 @@ fun QuestionTracker(
 @Preview(showBackground = true)
 @Composable
 fun QuestionDisplayPreview() {
-    QuestionDisplay()
+   // QuestionDisplay()
 }
